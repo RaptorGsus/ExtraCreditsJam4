@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
 
 public class SwitchSocket : MonoBehaviour
 {
@@ -8,12 +7,16 @@ public class SwitchSocket : MonoBehaviour
     public GameObject socketIN;
     public GameObject socketOUT;
 
+    public TextMeshProUGUI valueText;
+
+    public int socketValue;
+
     private bool inPlugged;
     private bool outPlugged;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        valueText.text = socketValue.ToString();
     }
 
     // Update is called once per frame
@@ -21,6 +24,8 @@ public class SwitchSocket : MonoBehaviour
     {
         
     }
+
+    
 
     
 }
