@@ -429,6 +429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73a434530fd29954e999bd88741f3b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
 --- !u!1 &3425224406412766867
 GameObject:
   m_ObjectHideFlags: 0
@@ -698,6 +699,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73a434530fd29954e999bd88741f3b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 1
 --- !u!1 &7302449546636964325
 GameObject:
   m_ObjectHideFlags: 0
@@ -745,8 +747,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5c6465db4a970845ba5864b2f58266e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  socketIN: {fileID: 3140013052197569154}
-  socketOUT: {fileID: 5140085547268931624}
+  socketIN: {fileID: 4194022220700737332}
+  socketOUT: {fileID: 2298724563723692418}
   valueText: {fileID: 8787245578945385274}
   socketValue: 0
 --- !u!1 &8196359624771252739

@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class WirePlug : MonoBehaviour
 {
+    public bool end = false;
     private bool grabbed = false;
     private bool inSocket = false;
     private bool closeToSocket = false;
+    public ExpressionSolver solver;
 
     [SerializeField]
     private SocketFemale InteractingSocket;
@@ -21,18 +23,17 @@ public class WirePlug : MonoBehaviour
 
     [Header("Sounds")]
     public AudioClip plugInSound;
-    public AudioClip unplugSound;
 
-    
-    
+    public AudioClip unplugSound;
 
     private void Start()
     {
         if (InteractingSocket != null) {
             PlugIn();
         }
-    }
 
+        solver = GameObject.FindGameObjectWithTag("ExpressionSolver").GetComponent<ExpressionSolver>();
+    }
 
     private void OnMouseDown()
     {
@@ -57,7 +58,7 @@ public class WirePlug : MonoBehaviour
             }
 
             //Left Mouse plugs in;
-            if (Input.GetMouseButtonDown(0) && closeToSocket && !InteractingSocket.IsFilled()) {
+            if (Input.GetMouseButtonDown(0) && closeToSocket && InteractingSocket!= null && !InteractingSocket.IsFilled()) {
                 PlugIn();
             }
 
@@ -85,27 +86,17 @@ public class WirePlug : MonoBehaviour
             float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
         }
-        
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-
         closeToSocket = false;
-        InteractingSocket = null;
+        if (!inSocket) {
+            InteractingSocket = null;
+        }
+        
     }
-
-    private void LateUpdate()
-    {
-        previousPosition = transform.position;
-    }
-
-    private Vector3 GetVelocity()
-    {
-        return (previousPosition - transform.position);
-    }
-
-    
 
     public void Grab()
     {
@@ -119,7 +110,10 @@ public class WirePlug : MonoBehaviour
 
         grabbed = false;
         inSocket = true;
+
         InteractingSocket.PlugIn(this);
+        
+
         transform.rotation = Quaternion.identity;
         transform.position = InteractingSocket.transform.position - anchor.localPosition;
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
@@ -127,9 +121,15 @@ public class WirePlug : MonoBehaviour
         pluggedInSprite.gameObject.SetActive(true);
         defaultSprite.gameObject.SetActive(false);
         Dangle(false);
+
+        if (solver != null) {
+            solver.SolveExpression();
+        }
+        
+
     }
 
-    private void Unplug()
+    public void Unplug()
     {
         GetComponent<AudioSource>().PlayOneShot(unplugSound);
         InteractingSocket.Unplug();
@@ -157,5 +157,33 @@ public class WirePlug : MonoBehaviour
         } else {
             rigidbody.bodyType = RigidbodyType2D.Kinematic;
         }
+    }
+
+    private Vector3 GetVelocity()
+    {
+        return (previousPosition - transform.position);
+    }
+    private void LateUpdate()
+    {
+        previousPosition = transform.position;
+    }
+
+    public SocketFemale.SocketType GetSocketType()
+    {
+        return InteractingSocket.socketType;
+    }
+
+    public SocketFemale GetSocket()
+    {
+        if (inSocket) {
+            return InteractingSocket;
+        }
+        return null;
+        
+    }
+
+    public Wire GetWire()
+    {
+        return GetComponentInParent<Wire>();
     }
 }

@@ -6,16 +6,23 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     public CallerCard card;
+    public int solvescore;
+    public int timeBonus;
+    public int pentalty;
     public List<Caller> callers;
     private bool levelRunning = false;
 
     public bool startLevelOnAwake = false;
+
+    public GameObject levelComplete;
+    public ScoreManager scoreManager;
 
     private void Awake()
     {
         if (startLevelOnAwake) {
             StartLevel();
         }
+
     }
 
     public List<Caller> GetCallers()
@@ -45,10 +52,9 @@ public class Level : MonoBehaviour
     {
         if (levelRunning) {
             if (card.IsEmpty()) {
-
                 Caller caller = GetNextCaller();
                 if (caller != null) {
-                    card.SetCard(GetNextCaller());
+                    card.SetCard(caller);
                 } else {
                     EndLevel();
                 }
@@ -59,8 +65,10 @@ public class Level : MonoBehaviour
 
     public void StartLevel()
     {
+        card.SetCard(callers[0]);
         levelRunning = true;
-        card.Unpause();
+        card.Unpause(); 
+        scoreManager.SetupLevel(solvescore, timeBonus, pentalty);
     }
 
     public void PauseLevel()
@@ -73,6 +81,7 @@ public class Level : MonoBehaviour
     {
         Debug.Log("Level Ended!");
         levelRunning = true;
+        levelComplete.SetActive(true);
     }
 }
 

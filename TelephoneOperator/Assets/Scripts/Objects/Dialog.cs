@@ -13,6 +13,7 @@ public class Dialog{
     }
     
     public string title;
+    [TextArea]
     public string body;
     public bool typeText;
 

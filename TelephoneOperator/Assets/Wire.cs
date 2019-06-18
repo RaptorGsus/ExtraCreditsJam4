@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wire : MonoBehaviour
+public class Wire : Node
 {
     public WirePlug plugOne;
     public WirePlug plugTwo;
@@ -25,5 +25,30 @@ public class Wire : MonoBehaviour
             !plugTwo.IsPluggedIn() && !plugTwo.IsGrabbed()) {
             GameObject.Destroy(this.gameObject, 0.5f);
         }
+    }
+
+    public override string Visit(ref string expression)
+    {
+        expression += addition;
+        Node next = GetNextNode();
+        if (next != null) {
+            return next.Visit(ref expression);
+        } else {
+            return expression;
+        }
+    }
+
+    private Node GetNextNode()
+    {
+        if (!plugOne.IsPluggedIn() || !plugTwo.IsPluggedIn()) return null;
+        if (plugOne.GetSocketType() == SocketFemale.SocketType.IN && plugTwo.GetSocketType() == SocketFemale.SocketType.OUT) return plugOne.GetSocket().GetSwitch();
+        if (plugOne.GetSocketType() == SocketFemale.SocketType.OUT && plugTwo.GetSocketType() == SocketFemale.SocketType.IN) return plugTwo.GetSocket().GetSwitch();
+        return null;
+    }
+
+    public void ResetWire()
+    {
+        plugOne.Unplug();
+        plugTwo.Unplug();
     }
 }

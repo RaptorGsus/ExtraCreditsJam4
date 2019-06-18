@@ -1,9 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public class SocketFemale : MonoBehaviour
 {
+    public bool end = false;
+    public enum SocketType
+    {
+        IN,
+        OUT
+    }
+
+    public SocketType socketType;
     private WirePlug wirePlug;
 
     public bool IsFilled()
@@ -11,11 +18,16 @@ public class SocketFemale : MonoBehaviour
         return wirePlug != null;
     }
 
+    internal SwitchSocket GetSwitch()
+    {
+        return GetComponentInParent<SwitchSocket>();
+    }
+
     public void PlugIn(WirePlug plug)
     {
         Debug.Log("Plugging in");
         wirePlug = plug;
-        GetComponent<SpriteRenderer>().color = Color.green;
+        //GetComponent<SpriteRenderer>().color = Color.green;
     }
 
     public void Unplug()
@@ -23,16 +35,11 @@ public class SocketFemale : MonoBehaviour
         Debug.Log("Plugging out");
 
         wirePlug = null;
-        GetComponent<SpriteRenderer>().color = Color.white;
+        //GetComponent<SpriteRenderer>().color = Color.white;
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
+    
+    public WirePlug GetPlug()
     {
-        
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        
+        return wirePlug;
     }
 }
